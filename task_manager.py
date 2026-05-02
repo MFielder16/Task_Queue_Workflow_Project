@@ -31,5 +31,12 @@ class TaskManager:
                 return task
         return None
 
+    # Add update_task_status to Taskmanager
+    def update_task_status(self, task_id, new_status):
+        task = self.get_task_by_id(task_id)
+        if task:
+            task.status = new_status
+            return task
+        return None
 
 
