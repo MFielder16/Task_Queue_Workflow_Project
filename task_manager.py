@@ -47,6 +47,14 @@ class TaskManager:
                 return True
 
         return False
+
+    # Add process_next_task to Taskmanager
+    def process_next_task(self):
+        for task in self.tasks:
+            if task.status == "queued":
+                task.status = "in_progress"
+            return task
+        return None
        
 
 
