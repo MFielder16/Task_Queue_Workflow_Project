@@ -39,4 +39,14 @@ class TaskManager:
             return task
         return None
 
+    # Add delete_task to Taskmanager
+    def delete_task(self, task_id):
+        for task in self.tasks:
+            if task.task_id == task_id:
+                self.tasks.remove(task)
+                return True
+
+        return False
+       
+
 
