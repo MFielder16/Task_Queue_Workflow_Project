@@ -6,17 +6,16 @@ class TaskManager:
     def __init__(self):
         # create a list comprehension to initialize an empty list for Task objects and set a counter to 1 for generating unique task IDs
         self.tasks = []
-        self.counter = 1
+        self.next_task_id = 1
         
 
         
     # create method called create_task accepts parameters for title, description, and priority, and creates a new Task object with a unique task ID
     def create_task(self, title, description, priority):
         # created a Task object with the provided title, description, and priority, and a unique task ID generated from the counter
-        print(f"Creating task with title: {title}, description: {description}, priority: {priority}")
         # append the new Task object to the tasks list and increment the counter for the next task ID
-        self.tasks.append(Task(title=title, description=description, task_id = self.counter, priority=priority))
-        self.counter += 1
+        self.tasks.append(Task(title=title, description=description, task_id = self.next_task_id, priority=priority))
+        self.next_task_id += 1
         # return the newly created Task object
         return self.tasks[-1]
 
