@@ -34,9 +34,16 @@ class TaskManager:
     # Add update_task_status to Taskmanager
     def update_task_status(self, task_id, new_status):
         task = self.get_task_by_id(task_id)
+        # add dictionary to validate new_status
+        task_dict = {"queued":"in_progress", "in_progress":["completed","failed"]} 
         if task:
-            task.status = new_status
-            return task
+            #check current status of task and validate new_status
+            for key, value in task_dict.items():
+                if task.status == key and new_status in value:
+                 task.status = new_status
+                 return task
+                else:
+                    return False
         return None
 
     # Add delete_task to Taskmanager
@@ -53,7 +60,7 @@ class TaskManager:
         for task in self.tasks:
             if task.status == "queued":
                 task.status = "in_progress"
-            return task
+                return task
         return None
        
 
