@@ -1,3 +1,9 @@
+# Import json  and Path from pathlib for file handling and JSON serialization
+import json
+from pathlib import Path
+#optional: import os
+import os
+from tkinter import SEL
 # import the Task class from the task module
 from task import Task
 # This module defines the TaskManager class, which is responsible for managing and executing tasks in a concurrent environment.
@@ -34,17 +40,24 @@ class TaskManager:
     # Add update_task_status to Taskmanager
     def update_task_status(self, task_id, new_status):
         task = self.get_task_by_id(task_id)
-        # add dictionary to validate new_status
-        task_dict = {"queued":"in_progress", "in_progress":["completed","failed"]} 
-        if task:
-            #check current status of task and validate new_status
-            for key, value in task_dict.items():
-                if task.status == key and new_status in value:
-                 task.status = new_status
-                 return task
-                else:
-                    return False
-        return None
+        if task is None:
+            # Task does not exist
+            return None
+
+        # Transition map: current_status -> list of allowed next statuses
+        transition_map = {
+            "queued": ["in_progress"],
+            "in_progress": ["completed", "failed"],
+            # add other statuses and allowed transitions here as needed
+        }
+
+        allowed_next = transition_map.get(task.status, [])
+        if new_status in allowed_next:
+            task.status = new_status
+            return task
+
+        # Invalid transition
+        return False
 
     # Add delete_task to Taskmanager
     def delete_task(self, task_id):
@@ -62,6 +75,47 @@ class TaskManager:
                 task.status = "in_progress"
                 return task
         return None
+
+    # Add save_tasks_to_file to Taskmanager
+    def save_to_file(self, filename = "tasks.json"):
+        # Convert each Task object to a dictionary
+        tasks_data = [task.to_dict() for task in self.tasks]
+
+        # write the list of task dictionaries to a JSON file
+        with open(filename, 'w') as file:
+            json.dump(tasks_data, file, indent=4)
+
+    # add load_tasks_from_file to Taskmanager
+    def load_from_file(self, filename = "tasks.json"):
+
+        # check if the file exists before trying to load
+        if not os.path.exists(filename):
+            print( f"File '{filename}' does not exist. No tasks loaded. Starting with an empty task list.")
+            return False
+
+        try:
+            # open and read the JSON file
+            with open(filename, 'r') as file:
+                tasks_data = json.load(file)
+
+            # rebuild Task objects from the list of task dictionaries
+            self.tasks = [Task.from_dict(task_dict) for task_dict in tasks_data]
+
+            #update the next_task_id to be one greater than the maximum existing task ID
+            if self.tasks:
+                max_id = max(task.task_id for task in self.tasks)
+                self.next_task_id = max_id + 1
+
+            print (f"Successfully loaded {len(self.tasks)} tasks from '{filename}'.")
+            return True
+
+        except json.JSONDecodeError:
+            print(f"Error: File '{filename}' contains invalid JSON.")
+            return False
+         
+        except Exception as e:
+            print (f"An error occurred while loading tasks from '{filename}': {e}")
+            return False
        
 
 
