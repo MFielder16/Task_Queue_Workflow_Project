@@ -1,9 +1,7 @@
 # Import json  and Path from pathlib for file handling and JSON serialization
 import json
-from pathlib import Path
 #optional: import os
 import os
-from tkinter import SEL
 # import the Task class from the task module
 from task import Task
 # This module defines the TaskManager class, which is responsible for managing and executing tasks in a concurrent environment.
@@ -36,6 +34,10 @@ class TaskManager:
             if task.task_id == task_id:
                 return task
         return None
+        
+        
+
+        
 
     # Add update_task_status to Taskmanager
     def update_task_status(self, task_id, new_status):
@@ -108,6 +110,10 @@ class TaskManager:
 
             print (f"Successfully loaded {len(self.tasks)} tasks from '{filename}'.")
             return True
+            
+            
+               
+
 
         except json.JSONDecodeError:
             print(f"Error: File '{filename}' contains invalid JSON.")

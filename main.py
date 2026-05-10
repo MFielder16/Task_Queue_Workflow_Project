@@ -8,16 +8,21 @@ manager.create_task(title="Finish project", description="Complete the report and
 manager.create_task(title="Exercise", description="Go for a run or do yoga", priority="low")
 
 # save all tasks to a JSON file
-manager.save_to_file()
-
-# create a new TaskManager instance and load tasks from the JSON file
-success = manager.load_from_file()
-print(success)
+manager.save_to_file("my_task.json")
 
 # create one new task
-new_task = manager.create_task(title="Read a book", description="Read 'The Great Gatsby'", priority="medium")
-print(new_task.task_id)
+#new_task = manager.create_task(title="Read a book", description="Read 'The Great Gatsby'", priority="medium")
+#print(new_task.task_id)
+#print(new_task)
 
+# create a new TaskManager instance and load tasks from the JSON file
+success = TaskManager()
+old_tasks = success.load_from_file("my_task.json")
+print(old_tasks)
+for task in success.get_all_tasks():
+    print(task)
+newer_task = success.create_task(title="Write code", description="Work on the task management system", priority="high")
+print(newer_task.task_id)
 
 #print("All Tasks: \n")
 #for task in manager.get_all_tasks():
